@@ -3,9 +3,8 @@ const path = require("path");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo");
-const mongoose = require("mongoose");
 
-const { NODE_ENV, SESS_SECRET } = process.env;
+const { NODE_ENV, SESS_SECRET, MONGODB_URL } = process.env;
 const isProduction = NODE_ENV === "production";
 
 function config(app) {
@@ -17,7 +16,6 @@ function config(app) {
   app.set("views", path.join(__dirname, "..", "views"));
   app.set("trust proxy", 1);
 
-  // use session
   app.use(
     session({
       secret: SESS_SECRET,

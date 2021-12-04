@@ -11,10 +11,29 @@ function getSignup(req, res) {
   res.render("signup", { err });
 }
 
+const emailRegex = /^\S+@\S+\.\S+$/;
+const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+
+function isValidationError(error) {
+  return error instanceof mongoose.Error.ValidationError;
+}
+
+function isMongoError(error) {
+  return error.code === 11000;
+}
+
+function hasWrongFormat(email, password) {
+  return !email.test(emailRegex) || !password.test(passwordRegex);
+}
+
 async function signup(req, res) {
   try {
     const { email, password } = req.body;
     const hasMissingCredentials = !email || !password;
+
+    if (hasWrongFormat(email, password)) {
+      return res.redirect("/signup?err=Wrong format");
+    }
     if (hasMissingCredentials) {
       return res.redirect("/signup?err=Missing credentials");
     }
@@ -33,7 +52,6 @@ async function signup(req, res) {
 }
 
 async function login(req, res) {
-  console.log("req session", req.session);
   try {
     const { email, password } = req.body;
     const hasMissingCredentials = !email || !password;
@@ -47,11 +65,19 @@ async function login(req, res) {
     const verify = await bcrypt.compare(password, user.password);
     if (verify) {
       req.session.currentUser = user;
-      return res.redirect("/private");
+      return res.redirect("/");
     }
     return res.redirect("/login?err=Something went wrong");
   } catch (err) {
     return res.redirect("/login?err=Something went wrong");
+  }
+}
+
+async function logout(req, res) {
+  try {
+    await req.session.destroy();
+  } catch (err) {
+    console.error(err);
   }
 }
 

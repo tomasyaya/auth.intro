@@ -1,6 +1,15 @@
 const router = require("express").Router();
-const { getHome, getPrivate } = require("../controllers");
+const { getHome, getPrivate, getPrivateUser } = require("../controllers");
 
-router.get("/", getHome).get("/private", getPrivate);
+const isLoggedIn = (req, res, next) => {
+  if (!req.session.currentUser) {
+    return res.redirect("/login");
+  }
+  next();
+};
+router
+  .get("/", getHome)
+  .get("/private", getPrivate)
+  .get("/private/user", getPrivateUser);
 
 module.exports = router;

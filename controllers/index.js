@@ -7,4 +7,9 @@ function getPrivate(req, res) {
   res.render("private");
 }
 
-module.exports = { getHome, getPrivate };
+function getPrivateUser(req, res) {
+  console.log("req", req.session.currentUser);
+  res.render("user");
+}
+
+module.exports = { getHome, getPrivate, getPrivateUser };

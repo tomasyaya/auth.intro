@@ -3,6 +3,11 @@ const app = require("express")();
 require("./config").config(app);
 require("./db").connectDb();
 
+app.use((req, res, next) => {
+  console.log("session", req.session);
+  next();
+});
+
 const indexRoutes = require("./routes");
 app.use("/", indexRoutes);
 
