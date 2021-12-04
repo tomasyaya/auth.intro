@@ -82,4 +82,9 @@ async function logout(req, res) {
   }
 }
 
-module.exports = { getLogin, getSignup, login, signup, logout };
+async function loggedAuth(req, res, next) {
+  console.log("current user", req.session.currentUser);
+  next();
+}
+
+module.exports = { getLogin, getSignup, login, signup, logout, loggedAuth };
