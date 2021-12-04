@@ -76,9 +76,10 @@ async function login(req, res) {
 async function logout(req, res) {
   try {
     await req.session.destroy();
+    console.log("loggout succesful");
   } catch (err) {
     console.error(err);
   }
 }
 
-module.exports = { getLogin, getSignup, login, signup };
+module.exports = { getLogin, getSignup, login, signup, logout };
