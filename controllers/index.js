@@ -1,4 +1,5 @@
 function getHome(req, res) {
+  console.log("inside home route");
   res.render("index");
 }
 
